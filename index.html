@@ -43,11 +43,11 @@ button{border:0;border-radius:12px;padding:12px 18px;font:700 15px inherit;curso
 <option value="AKADEMIK_KEBANGSAAN">8. Akademik & Kebangsaan</option>
 </select></div>
 <div class="field"><label for="level">Tingkat kesulitan</label><select id="level"><option value="ALL">Semua tingkat</option><option value="MUDAH">Mudah</option><option value="SEDANG">Sedang</option><option value="SULIT">Sulit</option></select></div>
-<div class="field"><label for="count">Jumlah soal</label><select id="count"><option value="20" selected>20 soal</option><option value="10">10 soal</option><option value="ALL">Semua soal tersedia</option></select></div>
+<div class="field"><label for="count">Jumlah soal</label><select id="count"><option value="20" selected>20 soal</option><option value="30">30 soal</option><option value="50">50 soal</option></select></div>
 <div class="field"><label for="duration">Waktu pengerjaan</label><select id="duration"><option value="0">Tanpa batas waktu</option><option value="30">30 menit</option><option value="60" selected>60 menit</option><option value="90">90 menit</option></select></div>
 </div>
 <div class="actions"><button class="primary" id="start">Mulai Simulasi</button><span class="small" id="available"></span></div>
-<p class="small">Target setiap menu: <b>20 soal</b> (7 Mudah, 7 Sedang, 6 Sulit). Tersedia saat ini: <b id="total"></b> butir soal pada bank yang sudah dimasukkan.</p>
+<p class="small">Target setiap menu: <b>50 soal</b> (17 Mudah, 17 Sedang, 16 Sulit). Tersedia saat ini: <b id="total"></b> butir soal pada bank yang sudah dimasukkan.</p>
 <div class="notice" style="margin-top:12px"><b>Status pengembangan:</b> Menu 8 bidang sudah ditambahkan. Soal yang belum tersedia pada bank akan ditampilkan sebagai 0 dan belum dapat dikerjakan sampai 20 butirnya diisi serta diverifikasi.</div>
 </section>
 
@@ -104,8 +104,8 @@ function available(){
  let arr=filtered();
  const cat=$("category").value;
  $("available").textContent=cat==="ALL"
-  ? `${arr.length} soal tersedia dari target 160 soal`
-  : `${arr.length} dari target 20 soal tersedia untuk ${MENU_LABELS[cat]||cat}`;
+  ? `${arr.length} soal tersedia dari target 400 soal`
+  : `${arr.length} dari target 50 soal tersedia untuk ${MENU_LABELS[cat]||cat}`;
  $("total").textContent=BANK.length;
  return arr;
 }
