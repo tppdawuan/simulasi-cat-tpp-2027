@@ -24,20 +24,31 @@ button{border:0;border-radius:12px;padding:12px 18px;font:700 15px inherit;curso
 </style>
 </head>
 <body>
-<header><div class="head"><div class="logo">✓</div><div><div class="brand">SIMULASI CAT TPP 2027</div><div class="sub">Latihan mandiri • Pendampingan Desa • Akademik & Kebangsaan</div></div></div></header>
+<header><div class="head"><div class="logo">✓</div><div><div class="brand">SIMULASI CAT TPP 2027</div><div class="sub">Latihan mandiri • 8 bidang regulasi, tata kelola desa, akademik & kebangsaan</div></div></div></header>
 <main>
 <section id="home" class="panel">
 <h1>Latihan Seleksi TPP 2027</h1>
 <p class="muted">Kerjakan soal secara mandiri, periksa jawaban, dan pelajari pembahasan beserta referensi regulasinya.</p>
 <div class="notice"><b>Catatan materi:</b> Bank soal ini merupakan bahan latihan yang sedang dikembangkan. Sebagian soal masih berstatus REVIEW dan belum dapat dianggap sebagai kisi-kisi atau soal resmi seleksi TPP 2027.</div>
 <div class="grid">
-<div class="field"><label for="category">Kategori soal</label><select id="category"><option value="ALL">Semua kategori</option><option value="PENDAMPINGAN">Pendampingan / Regulasi</option><option value="AKADEMIK_KEBANGSAAN">Akademik & Kebangsaan</option></select></div>
+<div class="field"><label for="category">Menu latihan</label><select id="category">
+<option value="ALL">Semua menu latihan</option>
+<option value="PENDAMPINGAN">1. Pendampingan Desa</option>
+<option value="UU_DESA">2. UU Desa & Peraturan Pelaksanaannya</option>
+<option value="BUM_DESA">3. BUM Desa</option>
+<option value="KDMP">4. KDMP</option>
+<option value="KEUANGAN_DESA">5. Pengelolaan Keuangan Desa</option>
+<option value="PERENCANAAN_DESA">6. Perencanaan Pembangunan Desa</option>
+<option value="DANA_DESA">7. Dana Desa</option>
+<option value="AKADEMIK_KEBANGSAAN">8. Akademik & Kebangsaan</option>
+</select></div>
 <div class="field"><label for="level">Tingkat kesulitan</label><select id="level"><option value="ALL">Semua tingkat</option><option value="MUDAH">Mudah</option><option value="SEDANG">Sedang</option><option value="SULIT">Sulit</option></select></div>
-<div class="field"><label for="count">Jumlah soal</label><select id="count"><option value="10">10 soal</option><option value="20">20 soal</option><option value="50">50 soal</option><option value="ALL">Semua soal tersedia</option></select></div>
+<div class="field"><label for="count">Jumlah soal</label><select id="count"><option value="20" selected>20 soal</option><option value="10">10 soal</option><option value="ALL">Semua soal tersedia</option></select></div>
 <div class="field"><label for="duration">Waktu pengerjaan</label><select id="duration"><option value="0">Tanpa batas waktu</option><option value="30">30 menit</option><option value="60" selected>60 menit</option><option value="90">90 menit</option></select></div>
 </div>
 <div class="actions"><button class="primary" id="start">Mulai Simulasi</button><span class="small" id="available"></span></div>
-<p class="small">Tersedia <b id="total"></b> butir soal dalam bank latihan.</p>
+<p class="small">Target setiap menu: <b>20 soal</b> (7 Mudah, 7 Sedang, 6 Sulit). Tersedia saat ini: <b id="total"></b> butir soal pada bank yang sudah dimasukkan.</p>
+<div class="notice" style="margin-top:12px"><b>Status pengembangan:</b> Menu 8 bidang sudah ditambahkan. Soal yang belum tersedia pada bank akan ditampilkan sebagai 0 dan belum dapat dikerjakan sampai 20 butirnya diisi serta diverifikasi.</div>
 </section>
 
 <section id="quiz" class="hidden">
@@ -79,8 +90,24 @@ const BANK=[{"id": "TPP27-001", "category": "PENDAMPINGAN", "topic": "Konsep das
 const $=id=>document.getElementById(id);
 let session=[],answers={},checked={},current=0,remaining=0,tick=null,finished=false;
 $("total").textContent=BANK.length;
+const MENU_LABELS={
+ PENDAMPINGAN:"Pendampingan Desa",
+ UU_DESA:"UU Desa & Peraturan Pelaksanaannya",
+ BUM_DESA:"BUM Desa",
+ KDMP:"KDMP",
+ KEUANGAN_DESA:"Pengelolaan Keuangan Desa",
+ PERENCANAAN_DESA:"Perencanaan Pembangunan Desa",
+ DANA_DESA:"Dana Desa",
+ AKADEMIK_KEBANGSAAN:"Akademik & Kebangsaan"
+};
 function available(){
- let arr=filtered();$("available").textContent=`${arr.length} soal sesuai pilihan`;return arr;
+ let arr=filtered();
+ const cat=$("category").value;
+ $("available").textContent=cat==="ALL"
+  ? `${arr.length} soal tersedia dari target 160 soal`
+  : `${arr.length} dari target 20 soal tersedia untuk ${MENU_LABELS[cat]||cat}`;
+ $("total").textContent=BANK.length;
+ return arr;
 }
 function filtered(){
  const cat=$("category").value,lev=$("level").value;
@@ -102,7 +129,7 @@ $("start").onclick=()=>{
 function startTimer(){if(tick)clearInterval(tick);updateTimer();if(remaining>0)tick=setInterval(()=>{remaining--;updateTimer();if(remaining<=0){clearInterval(tick);finishQuiz(true);}},1000);}
 function updateTimer(){if(remaining<=0){$("timer").textContent="Tanpa batas waktu";return;}let m=Math.floor(remaining/60),s=remaining%60;$("timer").textContent=`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;}
 function render(){
- const q=session[current];$("meta").textContent=`${q.id} • ${q.category==="PENDAMPINGAN"?"PENDAMPINGAN":"AKADEMIK & KEBANGSAAN"} • ${q.topic} • ${q.level}`;
+ const q=session[current];$("meta").textContent=`${q.id} • ${MENU_LABELS[q.category]||q.category} • ${q.topic} • ${q.level}`;
  $("stem").textContent=q.stem;$("options").innerHTML="";
  for(const l of "ABCDE"){
   const lab=document.createElement("label");lab.className="option"+(answers[current]===l?" selected":"");
